@@ -1,18 +1,28 @@
 ﻿// Algorithm
 
 //Input the calculation
+Console.WriteLine("Write the task:" );
+// task = input
 
 //Divide the calculation to tokens of numbers and signs
-
-// new s[input.length];
-
-// for i in tokens:
-// while i == int:
-// add token[pointer] = i;
+// void create_tokens {
+// new Queue tokens = Queue<str>[input.length];
+// new str number;
+// foreach i in task: 
+// if i == int: - use the sample from lecture
+// number.add(i);
+//else if i == ""
+// tokens.add(number)
+// else 
+// tokens.add(i)
+// }
 
 // here we need to write staks and queus
+// new class Queue {}
+// new class Stack {}
 // Performing the calculations 
 //  
+
 
 
 
