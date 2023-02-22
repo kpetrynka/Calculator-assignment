@@ -29,8 +29,20 @@ foreach (char i in expression)
 }
 
 // Start the calculation
+// Liza please write the psevdocode for calculation cause the only thing i understand is
+// we need to put them into different classes and then add somehow
 
 // Classes that we need
+Dictionary<string, int> priority = new Dictionary<string, int>()
+{
+    { "+", 1 },
+    { "-", 1 },
+    { "*", 2 },
+    { "/", 2 },
+    { "^", 2 },
+    { "(", 3 },
+};
+  
 
 public abstract class ArrayList
 {
@@ -51,8 +63,6 @@ public abstract class ArrayList
             }
 
             _array = extendedArray;
-            //this also can be achieved via
-            //Array.Resize(ref _array, _array.Length * 2);
         }
     }
 }
