@@ -1,29 +1,92 @@
-﻿// Algorithm
+﻿//Input the calculation
 
-//Input the calculation
-Console.WriteLine("Write the task:" );
-// task = input
+// Start the calculation
 
-//Divide the calculation to tokens of numbers and signs
-// void create_tokens {
-// new Queue tokens = Queue<str>[input.length];
-// new str number;
-// foreach i in task: 
-// if i == int: - use the sample from lecture
-// number.add(i);
-//else if i == ""
-// tokens.add(number)
-// else 
-// tokens.add(i)
-// }
+// Classes that we need
 
-// here we need to write staks and queus
-// new class Queue {}
-// new class Stack {}
-// Performing the calculations 
-//  
+public abstract class ArrayList
+{
+    private string?[] _array = new string?[10];
 
+    private int _pointer = 0;
+    public void Add(string element)
+    {
+        _array[_pointer] = element;
+        _pointer += 1;
 
+        if (_pointer == _array.Length)
+        {
+            string?[] extendedArray = new string[_array.Length * 2];
+            for (var i = 0; i < _array.Length; i++)
+            {
+                extendedArray[i] = _array[i];
+            }
 
+            _array = extendedArray;
+            //this also can be achieved via
+            //Array.Resize(ref _array, _array.Length * 2);
+        }
+    }
+}
 
-Console.WriteLine("Result");
+public class Queue
+{
+    private int[] _array = new int[10];
+
+    private int _pointer = 0;
+
+    public void Add(int element)
+    {
+        _array[_pointer] = element;
+        _pointer += 1;
+
+        if (_pointer == _array.Length)
+        {
+            var extendedArray = new int[_array.Length * 2];
+            for (var i = 0; i < _array.Length; i++)
+            {
+                extendedArray[i] = _array[i];
+            }
+
+            _array = extendedArray;
+        }
+    }
+
+    public void Pick(int smth)
+    {
+        _array[pointer];
+    }
+}
+
+public class Stack
+{
+    private const int Capacity = 50;
+    private string[] _array = new string[Capacity];
+    private int _pointer;
+
+    
+    public void Push(string value)
+    {
+        if (_pointer == _array.Length)
+        {
+            // this code is raising an exception about reaching stack limit
+            throw new Exception("Stack overflowed");
+        }
+
+        _array[_pointer] = value;
+        _pointer++;
+    }
+
+    public string Pull()
+    {
+        if (_pointer == 0)
+        {
+            //you can also raise an exception here, but we're simple returning nothing
+            return null;
+        }
+
+        var value = _array[_pointer];
+        _pointer--;
+        return value;
+    }
+}
