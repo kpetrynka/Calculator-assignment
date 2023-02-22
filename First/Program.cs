@@ -1,5 +1,33 @@
 ﻿//Input the calculation
 
+string expression= Console.ReadLine() ?? throw new InvalidOperationException();
+
+//do the tokens;
+string number = string.Empty;
+foreach (char i in expression)
+{
+    var success = int.TryParse(i, out int result);
+    ArrayList? tokens = null;
+    switch (success)
+    {
+        case true:
+        {
+            number += result.ToString();
+        }
+            break;
+        case false:
+        {
+            tokens.Add(number);
+            number = string.Empty;
+            if (i != null)
+            {
+                tokens.Add(i.ToString());
+            }
+            break;
+        }
+    } 
+}
+
 // Start the calculation
 
 // Classes that we need
