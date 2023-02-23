@@ -1,12 +1,12 @@
 ﻿//Input the calculation
-
+Console.WriteLine("Enter expression: ");
 string expression= Console.ReadLine() ?? throw new InvalidOperationException();
 
 //do the tokens;
 string number = string.Empty;
 foreach (char i in expression)
 {
-    var success = int.TryParse(i, out int result);
+    var success = int.TryParse(i, out int result); // i'm not sure if the thing works
     ArrayList? tokens = null;
     switch (success)
     {
@@ -35,7 +35,7 @@ foreach (char i in expression)
 Queue notation = new Queue();
 Stack numbers = new Stack();
 int index = 0;
-while (notation != null)
+while (notation != null) // here we can use OutOfQueue
 {
     string character = notation[index];
     if (int.TryParse(character, out int num))
@@ -45,8 +45,8 @@ while (notation != null)
     else
     {
         //Calculation()
-        int num1 = int.Parse(numbers.Pull());
-        int num2 = int.Parse(numbers.Pull());
+        var num1 = int.Parse(numbers.Pull());
+        var num2 = int.Parse(numbers.Pull());
         numbers.Push(ProcessCalculation(notation[1], num1, num2));
     }
 
@@ -54,9 +54,10 @@ while (notation != null)
 }
 
 int output = int.Parse(numbers[0]);
+Console.WriteLine("Result" + output);
 
 // Classes that we need
-Dictionary<string, int> priority = new Dictionary<string, int>()
+Dictionary<string, int> priority = new Dictionary<string, int>() //we will need it for polish notation
 {
     { "+", 1 },
     { "-", 1 },
@@ -91,7 +92,7 @@ int ProcessCalculation(string oper, int num1, int num2)
     }
     return result;
 }
-public abstract class ArrayList
+public abstract class ArrayList // maybe if the stack is written well we won't use it
 {
     private string?[] _array = new string?[10];
 
@@ -136,7 +137,7 @@ public class Queue
             _array = extendedArray;
         }
     }
-
+    // we should write OutOfQueue
     public void Pick(int smth)
     {
         _array[pointer];
