@@ -28,9 +28,32 @@ foreach (char i in expression)
     } 
 }
 
-// Start the calculation
-// Liza please write the psevdocode for calculation cause the only thing i understand is
-// we need to put them into different classes and then add somehow
+// write the polish notation of the expression
+// so here is already created PolishNotation which is queue
+
+// calculator
+Queue notation = new Queue();
+Stack numbers = new Stack();
+int index = 0;
+while (notation != null)
+{
+    string character = notation[index];
+    if (int.TryParse(character, out int num))
+    {
+        numbers.Push(num.ToString());
+    }
+    else
+    {
+        //Calculation()
+        int num1 = int.Parse(numbers.Pull());
+        int num2 = int.Parse(numbers.Pull());
+        numbers.Push(ProcessCalculation(notation[1], num1, num2));
+    }
+
+    index += 1;
+}
+
+int output = int.Parse(numbers[0]);
 
 // Classes that we need
 Dictionary<string, int> priority = new Dictionary<string, int>()
@@ -42,8 +65,32 @@ Dictionary<string, int> priority = new Dictionary<string, int>()
     { "^", 2 },
     { "(", 3 },
 };
-  
 
+int ProcessCalculation(string oper, int num1, int num2)
+{
+    var result = new int();
+    if (oper == "+")
+    {
+        result = num1 + num2;
+    }
+    if (oper == "-")
+    {
+        result = num1 - num2;
+    }
+    if (oper == "*")
+    {
+        result = num1 * num2;
+    }
+    if (oper == "/")
+    {
+        result = num1 / num2;
+    }
+    if (oper == "^")
+    {
+        result = num1 ^ num2;
+    }
+    return result;
+}
 public abstract class ArrayList
 {
     private string?[] _array = new string?[10];
@@ -93,6 +140,11 @@ public class Queue
     public void Pick(int smth)
     {
         _array[pointer];
+    }
+
+    public void Length()
+    {
+        int index = _pointer;
     }
 }
 
