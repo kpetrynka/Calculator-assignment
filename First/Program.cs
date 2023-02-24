@@ -1,57 +1,85 @@
-﻿//Input the calculation
-Console.WriteLine("Enter expression: ");
-string expression= Console.ReadLine() ?? throw new InvalidOperationException();
+﻿using Queue = First.Queue;
+using Stack = First.Stack;
+
+//Input the calculation
+var stage = true;
+while (stage)
+{
+    Console.WriteLine("Enter expression: ");
+    var expression = Console.ReadLine() ?? throw new InvalidOperationException();
+    var token = ToToken(expression);
+    var transformed = PostFix(token);
+    var result = CalculationPerformed(transformed);
+    Console.WriteLine(transformed);
+    Console.WriteLine("Try again? +/-");
+    string answer = Console.ReadLine() ?? throw new InvalidOperationException();
+    if (answer != "+")
+    {
+        stage = false;
+    }
+}
+
 
 //do the tokens;
-string number = string.Empty;
-foreach (char i in expression)
+Queue ToToken(string inputed)
 {
-    var success = int.TryParse(i, out int result); // i'm not sure if the thing works
-    ArrayList? tokens = null;
-    switch (success)
+    string number = string.Empty;
+    foreach (char i in string expression)
     {
-        case true:
+        var success = int.TryParse(i, out int result); // i'm not sure if the thing works
+        ArrayList? tokens = null;
+        switch (success)
         {
-            number += result.ToString();
-        }
-            break;
-        case false:
-        {
-            tokens.Add(number);
-            number = string.Empty;
-            if (i != null)
+            case true:
             {
-                tokens.Add(i.ToString());
+                number += result.ToString();
             }
-            break;
+                break;
+            case false:
+            {
+                tokens.Add(number);
+                number = string.Empty;
+                if (i != null)
+                {
+                    tokens.Add(i.ToString());
+                }
+
+                break;
+            }
         }
-    } 
+    }
 }
 
 // write the polish notation of the expression
 // so here is already created PolishNotation which is queue
-
-// calculator
-Queue notation = new Queue();
-Stack numbers = new Stack();
-int index = 0;
-while (notation != null) // here we can use OutOfQueue
+Queue PostFix(Queue tokens)
 {
-    string character = notation[index];
-    if (int.TryParse(character, out int num))
-    {
-        numbers.Push(num.ToString());
-    }
-    else
-    {
-        //Calculation()
-        var num1 = int.Parse(numbers.Pull());
-        var num2 = int.Parse(numbers.Pull());
-        numbers.Push(ProcessCalculation(notation[1], num1, num2));
-    }
-
-    index += 1;
+    
 }
+
+string CalculationPerformed(Queue postFixed)
+{
+    var numbers = new Stack();
+    var index = 0;
+    while (postFixed != null) // here we can use OutOfQueue
+    {
+        string character = postFixed[index];
+        if (int.TryParse(character, out int num))
+        {
+            numbers.Push(num.ToString());
+        }
+        else
+        {
+            //Calculation()
+            var num1 = int.Parse(numbers.Pull());
+            var num2 = int.Parse(numbers.Pull());
+            numbers.Push(ProcessCalculation(postFixed[1], num1, num2));
+        }
+    
+        index += 1;
+    }
+}
+
 
 int output = int.Parse(numbers[0]);
 Console.WriteLine("Result" + output);
@@ -112,72 +140,5 @@ public abstract class ArrayList // maybe if the stack is written well we won't u
 
             _array = extendedArray;
         }
-    }
-}
-
-public class Queue
-{
-    private int[] _array = new int[10];
-
-    private int _pointer = 0;
-
-    public void Add(int element)
-    {
-        _array[_pointer] = element;
-        _pointer += 1;
-
-        if (_pointer == _array.Length)
-        {
-            var extendedArray = new int[_array.Length * 2];
-            for (var i = 0; i < _array.Length; i++)
-            {
-                extendedArray[i] = _array[i];
-            }
-
-            _array = extendedArray;
-        }
-    }
-    // we should write OutOfQueue
-    public void Pick(int smth)
-    {
-        _array[pointer];
-    }
-
-    public void Length()
-    {
-        int index = _pointer;
-    }
-}
-
-public class Stack
-{
-    private const int Capacity = 50;
-    private string[] _array = new string[Capacity];
-    private int _pointer;
-
-    
-    public void Push(string value)
-    {
-        if (_pointer == _array.Length)
-        {
-            // this code is raising an exception about reaching stack limit
-            throw new Exception("Stack overflowed");
-        }
-
-        _array[_pointer] = value;
-        _pointer++;
-    }
-
-    public string Pull()
-    {
-        if (_pointer == 0)
-        {
-            //you can also raise an exception here, but we're simple returning nothing
-            return null;
-        }
-
-        var value = _array[_pointer];
-        _pointer--;
-        return value;
     }
 }
