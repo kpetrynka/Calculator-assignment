@@ -78,10 +78,6 @@ string CalculationPerformed(Queue postFixed)
     return result;
 }
 
-
-int output = int.Parse(numbers[0]);
-Console.WriteLine("Result" + output);
-
 // Classes that we need
 Dictionary<string, int> priority = new Dictionary<string, int>() //we will need it for polish notation
 {
@@ -93,30 +89,18 @@ Dictionary<string, int> priority = new Dictionary<string, int>() //we will need 
     { "(", 3 },
 };
 
-string ProcessCalculation(string oper, int num1, int num2)
+string ProcessCalculation(string sign, int num1, int num2)
 {
-    var result = new int();
-    if (oper == "+")
+    var processed = sign switch
     {
-        result = num1 + num2;
-    }
-    if (oper == "-")
-    {
-        result = num1 - num2;
-    }
-    if (oper == "*")
-    {
-        result = num1 * num2;
-    }
-    if (oper == "/")
-    {
-        result = num1 / num2;
-    }
-    if (oper == "^")
-    {
-        result = num1 ^ num2;
-    }
-    return result.ToString();
+        "+" => num1 + num2,
+        "-" => num1 - num2,
+        "*" => num1 * num2,
+        "/" => num1 / num2,
+        "^" => num1 ^ num2,
+        _ => new int()
+    };
+    return processed.ToString();
 }
 public abstract class ArrayList // maybe if the stack is written well we won't use it
 {
