@@ -60,24 +60,22 @@ Queue PostFix(Queue tokens)
 string CalculationPerformed(Queue postFixed)
 {
     var numbers = new Stack();
-    var index = 0;
-    while (postFixed != null) // here we can use OutOfQueue
+    while (postFixed.Out() != null) // here we can use OutOfQueue
     {
-        string character = postFixed[index];
-        if (int.TryParse(character, out int num))
+        var token = postFixed.Out();
+        if (int.TryParse(token, out int num))
         {
             numbers.Push(num.ToString());
         }
         else
         {
-            //Calculation()
             var num1 = int.Parse(numbers.Pull());
             var num2 = int.Parse(numbers.Pull());
-            numbers.Push(ProcessCalculation(postFixed[1], num1, num2));
+            numbers.Push(ProcessCalculation(token, num1, num2));
         }
-    
-        index += 1;
     }
+    var result = numbers.Pull();
+    return result;
 }
 
 
@@ -95,7 +93,7 @@ Dictionary<string, int> priority = new Dictionary<string, int>() //we will need 
     { "(", 3 },
 };
 
-int ProcessCalculation(string oper, int num1, int num2)
+string ProcessCalculation(string oper, int num1, int num2)
 {
     var result = new int();
     if (oper == "+")
@@ -118,7 +116,7 @@ int ProcessCalculation(string oper, int num1, int num2)
     {
         result = num1 ^ num2;
     }
-    return result;
+    return result.ToString();
 }
 public abstract class ArrayList // maybe if the stack is written well we won't use it
 {

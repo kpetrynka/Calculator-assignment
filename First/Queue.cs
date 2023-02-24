@@ -23,7 +23,7 @@ public class Queue
         }
     }
     // we should write Out
-    public object Out()
+    public string Out()
     {
         if (_pointer == 0)
         {
