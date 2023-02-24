@@ -1,183 +1,71 @@
-﻿//Input the calculation
-Console.WriteLine("Enter expression: ");
-string expression= Console.ReadLine() ?? throw new InvalidOperationException();
+﻿using System;
+using System.Collections.Generic;
 
-//do the tokens;
-string number = string.Empty;
-foreach (char i in expression)
+class Program
 {
-    var success = int.TryParse(i, out int result); // i'm not sure if the thing works
-    ArrayList? tokens = null;
-    switch (success)
+    static void Main()
     {
-        case true:
+        // Input the calculation
+        Console.WriteLine("Enter expression:");
+        string expression = Console.ReadLine();
+
+        // Do the tokenization
+        List<string> tokens = new List<string>();
+        string number = string.Empty;
+        foreach (char i in expression)
         {
-            number += result.ToString();
+            var success = int.TryParse(i.ToString(), out int result);
+            if (success)
+            {
+                number += result.ToString();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(number))
+                {
+                    tokens.Add(number);
+                    number = string.Empty;
+                }
+                if (i != ' ')
+                {
+                    tokens.Add(i.ToString());
+                }
+            }
         }
-            break;
-        case false:
+        if (!string.IsNullOrEmpty(number))
         {
             tokens.Add(number);
-            number = string.Empty;
-            if (i != null)
+        }
+
+        // Write the Polish notation of the expression
+        Queue<string> notation = new Queue<string>();
+        Stack<string> operators = new Stack<string>();
+        foreach (string token in tokens)
+        {
+            if (int.TryParse(token, out int num))
             {
-                tokens.Add(i.ToString());
+                notation.Enqueue(num.ToString());
             }
-            break;
-        }
-    } 
-}
-
-// write the polish notation of the expression
-// so here is already created PolishNotation which is queue
-
-// calculator
-Queue notation = new Queue();
-Stack numbers = new Stack();
-int index = 0;
-while (notation != null) // here we can use OutOfQueue
-{
-    string character = notation[index];
-    if (int.TryParse(character, out int num))
-    {
-        numbers.Push(num.ToString());
-    }
-    else
-    {
-        //Calculation()
-        var num1 = int.Parse(numbers.Pull());
-        var num2 = int.Parse(numbers.Pull());
-        numbers.Push(ProcessCalculation(notation[1], num1, num2));
-    }
-
-    index += 1;
-}
-
-int output = int.Parse(numbers[0]);
-Console.WriteLine("Result" + output);
-
-// Classes that we need
-Dictionary<string, int> priority = new Dictionary<string, int>() //we will need it for polish notation
-{
-    { "+", 1 },
-    { "-", 1 },
-    { "*", 2 },
-    { "/", 2 },
-    { "^", 2 },
-    { "(", 3 },
-};
-
-int ProcessCalculation(string oper, int num1, int num2)
-{
-    var result = new int();
-    if (oper == "+")
-    {
-        result = num1 + num2;
-    }
-    if (oper == "-")
-    {
-        result = num1 - num2;
-    }
-    if (oper == "*")
-    {
-        result = num1 * num2;
-    }
-    if (oper == "/")
-    {
-        result = num1 / num2;
-    }
-    if (oper == "^")
-    {
-        result = num1 ^ num2;
-    }
-    return result;
-}
-public abstract class ArrayList // maybe if the stack is written well we won't use it
-{
-    private string?[] _array = new string?[10];
-
-    private int _pointer = 0;
-    public void Add(string element)
-    {
-        _array[_pointer] = element;
-        _pointer += 1;
-
-        if (_pointer == _array.Length)
-        {
-            string?[] extendedArray = new string[_array.Length * 2];
-            for (var i = 0; i < _array.Length; i++)
+            else if (token == "(")
             {
-                extendedArray[i] = _array[i];
+                operators.Push(token);
             }
-
-            _array = extendedArray;
-        }
-    }
-}
-
-public class Queue
-{
-    private int[] _array = new int[10];
-
-    private int _pointer = 0;
-
-    public void Add(int element)
-    {
-        _array[_pointer] = element;
-        _pointer += 1;
-
-        if (_pointer == _array.Length)
-        {
-            var extendedArray = new int[_array.Length * 2];
-            for (var i = 0; i < _array.Length; i++)
+            else if (token == ")")
             {
-                extendedArray[i] = _array[i];
+                while (operators.Count > 0 && operators.Peek() != "(")
+                {
+                    notation.Enqueue(operators.Pop());
+                }
+                if (operators.Count == 0)
+                {
+                    throw new Exception("Unmatched parentheses");
+                }
+                operators.Pop();
             }
-
-            _array = extendedArray;
-        }
-    }
-    // we should write OutOfQueue
-    public void Pick(int smth)
-    {
-        _array[pointer];
-    }
-
-    public void Length()
-    {
-        int index = _pointer;
-    }
-}
-
-public class Stack
-{
-    private const int Capacity = 50;
-    private string[] _array = new string[Capacity];
-    private int _pointer;
-
-    
-    public void Push(string value)
-    {
-        if (_pointer == _array.Length)
-        {
-            // this code is raising an exception about reaching stack limit
-            throw new Exception("Stack overflowed");
-        }
-
-        _array[_pointer] = value;
-        _pointer++;
-    }
-
-    public string Pull()
-    {
-        if (_pointer == 0)
-        {
-            //you can also raise an exception here, but we're simple returning nothing
-            return null;
-        }
-
-        var value = _array[_pointer];
-        _pointer--;
-        return value;
-    }
-}
+            else // token is an operator
+            {
+                while (operators.Count > 0 && priority[token] <= priority[operators.Peek()])
+                {
+                    notation.Enqueue(operators.Pop());
+                }
+                operators.Push(token);
