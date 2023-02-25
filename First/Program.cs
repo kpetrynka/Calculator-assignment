@@ -78,28 +78,27 @@ Queue PostFix(Queue tokens)
             {
                   output.Add(operatorStack.Pop());          
             }
-            switch (token)
+
+            if (token == "(")
             {
-                case "(":
-                    operatorStack.Push(token);
-                    break;
-                case ")":
+                operatorStack.Push(token);
+            }
+            if (token == ")")
+            { 
+                while (operatorStack.Pop() != "(")
                 {
-                    while (operatorStack.Pop() != "(")
-                    {
-                        output.Add(operatorStack.Pop());
-                    }
-                    operatorStack.Pop();
-                    break;
+                    output.Add(operatorStack.Pop());
                 }
+                operatorStack.Pop();
             }
         }
-
-        while (!operatorStack.IsEmpty())
-        {
-            output.Add(operatorStack.Pop());
-        }
     }
+
+    while (!operatorStack.IsEmpty())
+    {
+        output.Add(operatorStack.Pop());
+    }
+    
     return output;
 }
 
