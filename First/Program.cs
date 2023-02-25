@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using Queue = First.Queue;
 using Stack = First.Stack;
 
@@ -56,48 +55,49 @@ Queue PostFix(Queue tokens)
         ["/"] = 2,
         ["^"] = 2, 
     };
-    string[] operators = { "+", "-", "*", "/","^"};
+
     var operatorStack = new Stack();
     var output = new Queue();
-    while (tokens.Out() != null)
+    while (!tokens.IsEmpty())
     {
         var token = tokens.Out();
         var checkIfNumber = double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out _);
-        var checkIfOperator = operators.Contains(token);
         if (checkIfNumber)
         {
             output.Add(token);
         }
-        if (checkIfOperator)
+        else
         {
-            if (operatorStack == null || operatorStack.Contains("("))
+            if (operatorStack.IsEmpty() 
+                || operatorStack.Contains("(") 
+                || priority[token] <= priority[operatorStack.Peek()])
             {
                 operatorStack.Push(token);
-            }
-            if (token == "(")
-            {
-                operatorStack.Push(token);
-            }
-            if (token == ")")
-            {
-                while (operatorStack.Pop() != "(")
-                {
-                    output.Add(operatorStack.Pop());
-                }
-                operatorStack.Pop();
             }
             if (priority[token] > priority[operatorStack.Peek()])
             {
-                operatorStack.Push(token); 
+                  output.Add(operatorStack.Pop());          
             }
-
-            if (priority[token] >= priority[operatorStack.Peek()]) continue;
-            while (priority[token] > priority[operatorStack.Peek()])
+            switch (token)
             {
-                operatorStack.Push(token); 
-                    
+                case "(":
+                    operatorStack.Push(token);
+                    break;
+                case ")":
+                {
+                    while (operatorStack.Pop() != "(")
+                    {
+                        output.Add(operatorStack.Pop());
+                    }
+                    operatorStack.Pop();
+                    break;
+                }
             }
-            operatorStack.Pop();
+        }
+
+        while (!operatorStack.IsEmpty())
+        {
+            output.Add(operatorStack.Pop());
         }
     }
     return output;
@@ -106,7 +106,7 @@ Queue PostFix(Queue tokens)
 string CalculationPerformed(Queue postFixed)
 {
     var numbers = new Stack();
-    while (postFixed.Out() != null)
+    while (!postFixed.IsEmpty())
     {
         var token = postFixed.Out();
         if (int.TryParse(token, out int num))

@@ -57,4 +57,9 @@ public class Stack
         }
         return exists > 0;
     }
+    
+    public bool IsEmpty()
+    { 
+        return _pointer == 0;
+    }
 }

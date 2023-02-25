@@ -38,4 +38,9 @@ public class Queue
         }
         return value;
     }
+
+    public bool IsEmpty()
+    { 
+        return _pointer == 0;
+    }
 }
