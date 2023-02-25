@@ -1,4 +1,6 @@
-﻿using Queue = First.Queue;
+﻿using System.Diagnostics;
+using System.Globalization;
+using Queue = First.Queue;
 using Stack = First.Stack;
 
 //Input the calculation
@@ -19,48 +21,107 @@ while (stage)
     }
 }
 
-
 //do the tokens;
-Queue ToToken(string inputed)
-{
-    string number = string.Empty;
-    foreach (char i in string expression)
+Queue ToToken(string inputted)
+{ ;
+    var n = "";
+    var output = new Queue();
+    foreach (char i in inputted)
     {
-        var success = int.TryParse(i, out int result); // i'm not sure if the thing works
-        ArrayList? tokens = null;
-        switch (success)
+        if (i != null)
         {
-            case true:
-            {
-                number += result.ToString();
+            if (int.TryParse(i, out _)
+            { 
+                n += i.ToString();
             }
-                break;
-            case false:
+            else
             {
-                tokens.Add(number);
-                number = string.Empty;
-                if (i != null)
-                {
-                    tokens.Add(i.ToString());
-                }
-
-                break;
+                output.Add(n);
+                output.Add(i.ToString());
             }
         }
-    }
+        return output;
 }
 
 // write the polish notation of the expression
-// so here is already created PolishNotation which is queue
+Dictionary<string, int> priority = new Dictionary<string, int>() //we will need it for polish notation
+{
+    ["+"] = 1,
+    ["-"] = 2,
+    ["*"] = 2,
+    ["/"] = 2,
+    ["^"] = 2,
+};
+
 Queue PostFix(Queue tokens)
 {
-    
+    string[] operators = { "+", "-", "*", "/","^"};
+    var operatorStack = new Stack();
+    var output = new Queue();
+    while (tokens.Out() != null)
+    {
+        var token = tokens.Out();
+        var checkIfNumber = double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out _);
+        var checkIfOperator = operators.Contains(token);
+        if (checkIfNumber)
+        {
+            output.Add(token);
+        }
+        if (checkIfOperator)
+        {
+            if (operatorStack == null && operatorStack.Contains("("))
+            {
+                operatorStack.Push(token);
+            }
+            if (token == "(")
+            {
+                operatorStack.Push(token);
+            }
+            if (token == ")")
+            {
+                while (operatorStack.Pop() != "(")
+                {
+                    output.Add(operatorStack.Pop());
+                }
+                operatorStack.Pop();
+            }
+            if (priority[token] > priority[operatorStack.Peek()])
+            {
+                operatorStack.Push(token); 
+            }
+
+            if (priority[token] >= priority[operatorStack.Peek()]) continue;
+            while (priority[token] > priority[operatorStack.Peek()])
+            {
+                operatorStack.Push(token); 
+                    
+            }
+            operatorStack.Pop();
+            //Print the operand as they arrive.
+//   If the stack is empty or contains a left parenthesis on top, push the incoming operator on to the stack.
+// If the incoming symbol is '(', push it on to the stack.
+//   If the incoming symbol is ')', pop the stack and print the operators until the left parenthesis is found.
+//    If the incoming symbol has higher precedence than the top of the stack, push it on the stack.
+//    If the incoming symbol has lower precedence than the top of the stack, pop and print the top of the stack. Then test the incoming operator against the new top of the stack.
+//    If the incoming operator has the same precedence with the top of the stack then use the associativity rules. If the associativity is from left to right then pop and print the top of the stack then push the incoming operator. If the associativity is from right to left then push the incoming operator.
+            // At the end of the expression, pop and print all the operators of the stack.  
+            
+        }
+    }
+
+    while (!operatorStack.IsEmpty())
+    {
+        output.Enqueue(operatorStack.Pull());
+    }
+
+    return output;
 }
+
 
 string CalculationPerformed(Queue postFixed)
 {
     var numbers = new Stack();
-    while (postFixed.Out() != null) // here we can use OutOfQueue
+    while (postFixed.Out() != null)
     {
         var token = postFixed.Out();
         if (int.TryParse(token, out int num))
@@ -78,16 +139,6 @@ string CalculationPerformed(Queue postFixed)
     return result;
 }
 
-// Classes that we need
-Dictionary<string, int> priority = new Dictionary<string, int>() //we will need it for polish notation
-{
-    { "+", 1 },
-    { "-", 1 },
-    { "*", 2 },
-    { "/", 2 },
-    { "^", 2 },
-    { "(", 3 },
-};
 
 string ProcessCalculation(string sign, int num1, int num2)
 {
@@ -101,26 +152,4 @@ string ProcessCalculation(string sign, int num1, int num2)
         _ => new int()
     };
     return processed.ToString();
-}
-public abstract class ArrayList // maybe if the stack is written well we won't use it
-{
-    private string?[] _array = new string?[10];
-
-    private int _pointer = 0;
-    public void Add(string element)
-    {
-        _array[_pointer] = element;
-        _pointer += 1;
-
-        if (_pointer == _array.Length)
-        {
-            string?[] extendedArray = new string[_array.Length * 2];
-            for (var i = 0; i < _array.Length; i++)
-            {
-                extendedArray[i] = _array[i];
-            }
-
-            _array = extendedArray;
-        }
-    }
 }

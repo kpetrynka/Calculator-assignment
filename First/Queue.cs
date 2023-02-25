@@ -13,7 +13,7 @@ public class Queue
 
         if (_pointer == _array.Length)
         {
-            var extendedArray = new int[_array.Length * 2];
+            string[] extendedArray = new string[_array.Length * 2];
             for (var i = 0; i < _array.Length; i++)
             {
                 extendedArray[i] = _array[i];
@@ -37,10 +37,5 @@ public class Queue
             _array[i] = _array[i + 1];
         }
         return value;
-    }
-
-    public void Pick(int smth)
-    {
-        _array[pointer];
     }
 }

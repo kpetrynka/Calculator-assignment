@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 namespace First;
 
 
@@ -7,7 +9,7 @@ public class Stack
     private string[] _array = new string[Capacity];
     private int _pointer;
 
-    
+
     public void Push(string value)
     {
         if (_pointer == _array.Length)
@@ -20,7 +22,7 @@ public class Stack
         _pointer++;
     }
 
-    public string Pull()
+    public string Pop()
     {
         if (_pointer == 0)
         {
@@ -30,5 +32,29 @@ public class Stack
         var value = _array[_pointer];
         _pointer--;
         return value;
+    }
+
+    public string Peek()
+    {
+        if (_pointer == 0)
+        {
+            return null;
+        }
+
+        var value = _array[_pointer - 1];
+        return value;
+    }
+
+    public bool Contains(string value)
+    {
+        var exists = 0;
+        foreach (var i in _array)
+        {
+            if (i == value)
+            {
+                exists += 1;
+            }
+        }
+        return exists > 0;
     }
 }
