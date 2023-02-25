@@ -25,20 +25,28 @@ Queue ToToken(string inputted)
 {
     var n = "";
     var output = new Queue();
-    for (var i = 0; i < inputted.Length; i++)
+    foreach (char i in inputted)
     {
-        if (char.IsDigit(inputted[i]))
+        if (char.IsDigit(i))
         {
             n += i.ToString();
         }
-        else if (char.IsWhiteSpace(inputted[i]))
+        else if (char.IsWhiteSpace(i))
         {
             output.Add(n);
             n = "";
         }
-        else {
+        else
+        {
+            output.Add(n);
             output.Add(i.ToString());
+            n = "";
         }
+    }
+
+    if (n.Length > 0)
+    {
+        output.Add(n);
     }
     return output;
 }
