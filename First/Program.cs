@@ -25,24 +25,23 @@ Queue ToToken(string inputted)
 {
     var n = "";
     var output = new Queue();
-    foreach (char i in inputted)
+    for (var i = 0; i < inputted.Length; i++)
     {
-        if (!i.Equals(null))
+        if (char.IsDigit(inputted[i]))
         {
-            if (int.TryParse(i.ToString(), out _))
-            {
-                n += i.ToString();
-            }
-            else
-            {
-                output.Add(n);
-                output.Add(i.ToString());
-            }
+            n += i.ToString();
+        }
+        else if (char.IsWhiteSpace(inputted[i]))
+        {
+            output.Add(n);
+            n = "";
+        }
+        else {
+            output.Add(i.ToString());
         }
     }
     return output;
 }
-
 
 
 Queue PostFix(Queue tokens)
@@ -74,11 +73,6 @@ Queue PostFix(Queue tokens)
             {
                 operatorStack.Push(token);
             }
-            if (priority[token] > priority[operatorStack.Peek()])
-            {
-                  output.Add(operatorStack.Pop());          
-            }
-
             if (token == "(")
             {
                 operatorStack.Push(token);
@@ -91,6 +85,12 @@ Queue PostFix(Queue tokens)
                 }
                 operatorStack.Pop();
             }
+            if (priority[token] > priority[operatorStack.Peek()])
+            {
+                  output.Add(operatorStack.Pop());          
+            }
+
+            
         }
     }
 
@@ -98,7 +98,6 @@ Queue PostFix(Queue tokens)
     {
         output.Add(operatorStack.Pop());
     }
-    
     return output;
 }
 
@@ -108,7 +107,7 @@ string CalculationPerformed(Queue postFixed)
     while (!postFixed.IsEmpty())
     {
         var token = postFixed.Out();
-        if (int.TryParse(token, out int num))
+        if (int.TryParse(token, out var num))
         {
             numbers.Push(num.ToString());
         }
