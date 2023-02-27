@@ -1,2 +1,2 @@
-# Calculator-assigment
+# Calculator-assignment
 Partner - Liza
