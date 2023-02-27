@@ -24,6 +24,7 @@ while (stage)
 Queue ToToken(string inputted)
 {
     var n = "";
+    var function = "";
     var output = new Queue();
     foreach (char i in inputted)
     {
@@ -31,16 +32,37 @@ Queue ToToken(string inputted)
         {
             n += i.ToString();
         }
+        
+        else if (char.IsLetter(i))
+        {
+            function += i.ToString();
+        }
         else if (char.IsWhiteSpace(i))
         {
-            output.Add(n);
-            n = "";
+            if (function.Length > 0)
+            { 
+                output.Add(function);
+                function = "";
+            }
+            else if (n.Length > 0)
+            { 
+                output.Add(n);
+                n = ""; 
+            }
         }
         else
         {
-            output.Add(n);
+            if (function.Length > 0)
+            { 
+                output.Add(function);
+                function = "";
+            }
+            else if (n.Length > 0)
+            { 
+                output.Add(n);
+                n = ""; 
+            }
             output.Add(i.ToString());
-            n = "";
         }
     }
 
@@ -73,13 +95,17 @@ Queue PostFix(Queue tokens)
         {
             output.Add(token);
         }
+        else if (token is "sin" or "cos" or "tg")
+        {
+            operatorStack.Push(token);
+        }
         else if (priority.TryGetValue(token, out var tokenPriority))
         {
             if (operatorStack.IsEmpty())
             {
                 operatorStack.Push(token);
             }
-            else while (priority[operatorStack.Peek()] > tokenPriority ||
+            else while (!operatorStack.IsEmpty() && priority[operatorStack.Peek()] > tokenPriority ||
                    priority[operatorStack.Peek()] == tokenPriority)
             {
                 if (operatorStack.Peek() != "(")
@@ -98,12 +124,16 @@ Queue PostFix(Queue tokens)
                 {
                     output.Add(operatorStack.Pop());
                 }
-
                 operatorStack.Pop();
+                if (operatorStack.Peek() is "sin" or "cos" or "tg")
+                {
+                    output.Add(operatorStack.Pop());
+                }
                 break;
             }
         }
     }
+    
     while (!operatorStack.IsEmpty())
     {
         output.Add(operatorStack.Pop());
@@ -121,9 +151,14 @@ string CalculationPerformed(Queue postFixed)
         {
             numbers.Push(num.ToString());
         }
+        else if (token is "sin" or "cos" or "tg")
+        {
+            var n1 = double.Parse(numbers.Pop());
+            numbers.Push(ProcessCalculation(token, n1, 0));
+        }
         else
         {
-            var n1 = int.Parse(numbers.Pop());
+            var n1 = double.Parse(numbers.Pop());
             var n2 = int.Parse(numbers.Pop());
             numbers.Push(ProcessCalculation(token, n1, n2));
         }
@@ -133,7 +168,7 @@ string CalculationPerformed(Queue postFixed)
 }
 
 
-string ProcessCalculation(string sign, int num1, int num2)
+string ProcessCalculation(string sign, double num1, int num2)
 {
     var processed = sign switch
     {
@@ -141,8 +176,11 @@ string ProcessCalculation(string sign, int num1, int num2)
         "-" => num2 - num1,
         "*" => num2 * num1,
         "/" => num2 / num1,
-        "^" => num2 ^ num1,
-        _ => new int()
+        "^" => num2 ^ (int)num1,
+        "sin" => Math.Sin(num1),
+        "cos" => Math.Cos(num1),
+        "tg" => Math.Tan(num1),
+            _ => new int()
     };
-    return processed.ToString();
+    return processed.ToString(CultureInfo.InvariantCulture);
 }
