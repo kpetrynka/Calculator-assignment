@@ -26,23 +26,29 @@ public class Stack
     {
         if (_pointer == 0)
         {
-            return null;
+            var valueNull = _array[0];
+            return valueNull;
         }
-
-        var value = _array[_pointer];
-        _pointer--;
-        return value;
+        else
+        { 
+            var value = _array[_pointer]; 
+            _pointer--; 
+            return value;  
+        }
     }
 
     public string Peek()
     {
         if (_pointer == 0)
         {
-            return null;
+            var nullValue = _array[0];
+            return nullValue;
         }
-
-        var value = _array[_pointer - 1];
-        return value;
+        else
+        {
+            var value = _array[_pointer - 1];
+            return value;
+        }
     }
 
     public bool Contains(string value)
@@ -59,7 +65,15 @@ public class Stack
     }
     
     public bool IsEmpty()
-    { 
-        return _pointer == 0;
+    {
+        if (_pointer == 0)
+        {
+            var valueNull = _array[0];
+            return valueNull == null;
+        }
+        else
+        {
+            return _pointer == 0;
+        }
     }
 }

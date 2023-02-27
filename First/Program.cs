@@ -97,14 +97,15 @@ Queue PostFix(Queue tokens)
             {
                   output.Add(operatorStack.Pop());          
             }
-
-            
         }
     }
 
+    operatorStack.Pop();
+
     while (!operatorStack.IsEmpty())
     {
-        output.Add(operatorStack.Pop());
+        var sing = operatorStack.Pop();
+        output.Add(sing);
     }
     return output;
 }
