@@ -13,7 +13,7 @@ public class Queue
 
         if (_pointer == _array.Length)
         {
-            string[] extendedArray = new string[_array.Length + 2];
+            string[] extendedArray = new string[_array.Length * 2];
             for (var i = 0; i < _array.Length; i++)
             {
                 extendedArray[i] = _array[i];
@@ -22,7 +22,7 @@ public class Queue
             _array = extendedArray;
         }
     }
-    // we should write Out
+    
     public string Out()
     {
         if (_pointer == 0)
@@ -40,7 +40,7 @@ public class Queue
     }
 
     public bool IsEmpty()
-    { 
+    {
         return _pointer == 0;
     }
 }

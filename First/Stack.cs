@@ -24,16 +24,19 @@ public class Stack
 
     public string Pop()
     {
-        if (_pointer == 0)
+        if (_array[_pointer] == null)
         {
-            var valueNull = _array[0];
-            return valueNull;
+            var value = _array[_pointer - 1];
+            return value;
         }
-        else
+        else 
         { 
-            var value = _array[_pointer]; 
-            _pointer--; 
-            return value;  
+            var value = _array[_pointer];
+            if (_pointer > 0)
+            {
+                _pointer--;
+            }
+            return value;
         }
     }
 
@@ -66,14 +69,6 @@ public class Stack
     
     public bool IsEmpty()
     {
-        if (_pointer == 0)
-        {
-            var valueNull = _array[0];
-            return valueNull == null;
-        }
-        else
-        {
-            return _pointer == 0;
-        }
+        return _pointer == 0;
     }
 }

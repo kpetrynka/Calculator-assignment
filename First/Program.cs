@@ -57,7 +57,7 @@ Queue PostFix(Queue tokens)
     Dictionary<string, int> priority = new Dictionary<string, int>() //we will need it for polish notation
     {
         ["+"] = 1,
-        ["-"] = 2,
+        ["-"] = 1,
         ["*"] = 2,
         ["/"] = 2,
         ["^"] = 2, 
@@ -73,39 +73,40 @@ Queue PostFix(Queue tokens)
         {
             output.Add(token);
         }
-        else
+        else if (priority.TryGetValue(token, out var tokenPriority))
         {
-            if (operatorStack.IsEmpty() 
-                || operatorStack.Contains("(") 
-                || priority[token] <= priority[operatorStack.Peek()])
+            if (operatorStack.IsEmpty())
             {
                 operatorStack.Push(token);
             }
-            if (token == "(")
+            else while (priority[operatorStack.Peek()] > tokenPriority ||
+                   priority[operatorStack.Peek()] == tokenPriority)
             {
-                operatorStack.Push(token);
+                if (operatorStack.Peek() != "(")
+                    output.Add(operatorStack.Pop());
+                else break;
             }
-            if (token == ")")
-            { 
-                while (operatorStack.Pop() != "(")
+        }
+        else switch (token)
+        {
+            case "(":
+                operatorStack.Push(token);
+                break;
+            case ")":
+            {
+                while (operatorStack.Peek() != "(")
                 {
                     output.Add(operatorStack.Pop());
                 }
+
                 operatorStack.Pop();
-            }
-            if (priority[token] > priority[operatorStack.Peek()])
-            {
-                  output.Add(operatorStack.Pop());          
+                break;
             }
         }
     }
-
-    operatorStack.Pop();
-
     while (!operatorStack.IsEmpty())
     {
-        var sing = operatorStack.Pop();
-        output.Add(sing);
+        output.Add(operatorStack.Pop());
     }
     return output;
 }
@@ -122,9 +123,9 @@ string CalculationPerformed(Queue postFixed)
         }
         else
         {
-            var num1 = int.Parse(numbers.Pop());
-            var num2 = int.Parse(numbers.Pop());
-            numbers.Push(ProcessCalculation(token, num1, num2));
+            var n1 = int.Parse(numbers.Pop());
+            var n2 = int.Parse(numbers.Pop());
+            numbers.Push(ProcessCalculation(token, n1, n2));
         }
     }
     var result = numbers.Pop();
@@ -136,11 +137,11 @@ string ProcessCalculation(string sign, int num1, int num2)
 {
     var processed = sign switch
     {
-        "+" => num1 + num2,
-        "-" => num1 - num2,
-        "*" => num1 * num2,
-        "/" => num1 / num2,
-        "^" => num1 ^ num2,
+        "+" => num2 + num1,
+        "-" => num2 - num1,
+        "*" => num2 * num1,
+        "/" => num2 / num1,
+        "^" => num2 ^ num1,
         _ => new int()
     };
     return processed.ToString();
