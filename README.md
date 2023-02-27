@@ -1,4 +1,2 @@
 # Calculator-assigment
-Partner - Liza
-
-Here will be our great assigment
+Tried my best to complete it by myself. Still have a problem but no more creativity how to fix
